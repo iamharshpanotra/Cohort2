@@ -94,6 +94,6 @@ doStep1(function(result1) {
 ```
 
 This nested structure becomes **hard to read and maintain** — called **callback hell**.  
-This is why we often use **Promises** and **async/await** in modern JS instead (want me to explain those too? 😉).
+This is why we often use **Promises** and **async/await** in modern JS instead
 
 ---
