@@ -6,3 +6,6 @@ function findSum(a,b) {
 
 const sum = findSum(5,10);
 console.log(sum);
+
+
+// Nikhil["name"] ======= Nihil.name
