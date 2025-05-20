@@ -1,31 +1,25 @@
 const express = require("express");
-const fetch = require("node-fetch");
 const zod = require("zod");
 const app = express();
-const port = 3000;
+
+const schema = zod.array(zod.number());
+
 app.use(express.json());
-
-function middleware(req, res, next){
-    fetch().then(() {
-        next()
-
-    })
-}
 
 app.post("/health-checkup", function (req, res){
     // kidneys = [1,2]
     const kidneys = req.body.kidneys;
-    const kidneyLength = kidneys.length;
-    res.send("You have " + kidneyLength + " kidneys");
+    const response = schema.safeParse(kidneys);
+    if (!response.success) {
+        return res.status(411).json({
+            msg: "Input is not valid"
+        });
+    }
+    else{
+    res.send({
+            response
+        })
+    }    
 });
 
-
-// global catches
-app.use(function(err, req, res, next){
-    errorCount++;
-    res.json({
-        msg: "Something went wrong",
-    })
-})
-
-app.listen(port);
+app.listen(3000);
