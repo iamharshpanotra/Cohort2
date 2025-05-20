@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Using API</title>
+        <link rel = "stylesheet" href = "style.css">
+    </head>
+    <body>
+        <script>
+            function getAnimalData(){
+                // alert("Button Clicked!");
+                const response = fetch("https://fakerapi.it/api/v1/persons").then(function(response){
+                    response.json()
+                    .then(function(finalData){
+                        console.log(finalData);
+                    })
+                })
+                console.log(response);
+            }
+        </script>
+        <button id="fetch-data" onclick="getAnimalData()">Get Animal <Datalist></Datalist></button>
+    </body>
+</html>
