@@ -28,7 +28,7 @@ app.post("/signup", async function(req, res) {
     // Extracting the submitted data from the request body
     const username = req.body.username; // Email (username)
     const password = req.body.password; // Password
-    const name = req.body.name;         // Full name
+    const email = req.body.email;         // Full name
 
     // Checking if a user with the same email already exists in the database
     const existingUser = await User.findOne({ email: username });
@@ -41,8 +41,8 @@ app.post("/signup", async function(req, res) {
 
     // Creating a new user object based on the submitted data
     const user = new User({
-        name: name,
-        email: username,
+        name: username,
+        email: email,
         password: password // WARNING: Storing plain text passwords is insecure
     });
 
