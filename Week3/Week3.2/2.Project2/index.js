@@ -9,17 +9,17 @@ const ALL_USERS = [
     {
         username: "dikshitsambyal@gmail.com",
         password: "123",
-        // name: "Dikshit Sambyal",
+        name: "Dikshit Sambyal",
     },
     {
         username: "slathiaaman@gmail.com",
         password: "123321",
-        // name: "Aman Slathia",
+        name: "Aman Slathia",
     },
     {
         username: "nikhilmehra55@gmail.com",
         password: "123321",
-        // name: "Nikhil Mehra",
+        name: "Nikhil Mehra",
     },
 ];
 
