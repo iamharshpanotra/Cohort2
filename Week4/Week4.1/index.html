@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,11 +25,11 @@
     }
 </script>
 <body>
-    <!-- <input type="text" placeholder="First Number" id="first"></input><br><br>
+ <input type="text" placeholder="First Number" id="first"></input><br><br>
     <input type="text" placeholder="Second Number" id="second"></input><br><br>
-    <button onclick="populateDiv()">Calculate Sum</button><b9#r><br> -->
+    <button onclick="populateDiv()">Calculate Sum</button><b9#r><br> 
 
-        <input onchange="populateDiv()" type="text" placeholder="First Number" id="first"></input><br><br>
+ <input onchange="populateDiv()" type="text" placeholder="First Number" id="first"></input><br><br>
     <input onchange="populateDiv()" type="text" placeholder="Second Number" id="second"></input><br><br>
     <button onclick="populateDiv()">Calculate Sum</button><b9#r><br>
 
@@ -38,3 +38,53 @@
 
 
 </html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestFile</title>
+    
+    <style>
+
+    </style>
+</head>
+
+
+<script>
+    function populateDiv(){
+        const a = document.getElementById("first").value;
+        const b = document.getElementById("second").value;
+
+        // const element = document.getElementById("finalSum");
+        // element.innerHTML = parseInt(a) + parseInt(b);
+
+        // axios
+        fetch("https://x.com/home")
+        .then(function(response){
+            console.log(response);
+
+            respone.text()
+            .then(function(ans) {
+                console.log(ans);
+            })
+        });
+    }
+</script>
+<body>
+    <input type="text" placeholder="First Number" id="first"></input><br><br>
+    <input type="text" placeholder="Second Number" id="second"></input><br><br>
+     
+    <button onclick="populateDiv()">Calculate Sum</button><b9#r><br>
+
+    <div id="finalSum"></div>
+</body>
+
+
+</html>
+
+
+
+<!-- Debouncing and throttling -->
