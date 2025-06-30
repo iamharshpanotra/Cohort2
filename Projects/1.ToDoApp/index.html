@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo Application</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        #todos {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .todo-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+        
+        .todo-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .todo-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .todo-desc {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .done-btn {
+            background-color: #2ecc71;
+        }
+        
+        .done-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .completed {
+            opacity: 0.7;
+            background-color: #f9f9f9;
+        }
+        
+        .completed .todo-title, .completed .todo-desc {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>My ToDo List</h1>
+    
+    <div class="input-container">
+        <input id="title" type="text" placeholder="What needs to be done?" autofocus>
+        <input id="desc" type="text" placeholder="Add some details...">
+        <button onclick="addTodo()">Add ToDo</button>
+    </div>
+    
+    <div id="todos">
+        <div class="empty-state">No tasks yet. Add your first todo!</div>
+    </div>
+
+    <script>
+        let globalId = 1;
+        let todos = [];
+        
+        function updateEmptyState() {
+            const todosContainer = document.getElementById("todos");
+            const emptyState = todosContainer.querySelector(".empty-state");
+            
+            if (todos.length === 0 && !emptyState) {
+                todosContainer.innerHTML = '<div class="empty-state">No tasks yet. Add your first todo!</div>';
+            } else if (todos.length > 0 && emptyState) {
+                emptyState.remove();
+            }
+        }
+        
+        function createTodoElement(title, desc, id, isCompleted) {
+            const todoElement = document.createElement("div");
+            todoElement.className = `todo-item ${isCompleted ? 'completed' : ''}`;
+            todoElement.setAttribute("id", `todo-${id}`);
+            
+            const titleElement = document.createElement("div");
+            titleElement.className = "todo-title";
+            titleElement.textContent = title;
+            
+            const descElement = document.createElement("div");
+            descElement.className = "todo-desc";
+            descElement.textContent = desc;
+            
+            const actionsElement = document.createElement("div");
+            actionsElement.className = "todo-actions";
+            
+            const doneButton = document.createElement("button");
+            doneButton.className = "done-btn";
+            doneButton.textContent = isCompleted ? "Undo" : "Mark as done";
+            doneButton.onclick = () => toggleDone(id);
+            
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "delete-btn";
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => deleteTodo(id);
+            
+            actionsElement.appendChild(doneButton);
+            actionsElement.appendChild(deleteButton);
+            
+            todoElement.appendChild(titleElement);
+            todoElement.appendChild(descElement);
+            todoElement.appendChild(actionsElement);
+            
+            return todoElement;
+        }
+        
+        function addTodo() {
+            const title = document.getElementById("title").value.trim();
+            const desc = document.getElementById("desc").value.trim();
+            
+            if (!title) {
+                alert("Please enter a title for your todo!");
+                return;
+            }
+            
+            const newTodo = {
+                id: globalId++,
+                title,
+                desc,
+                completed: false,
+                createdAt: new Date()
+            };
+            
+            todos.push(newTodo);
+            saveTodos();
+            
+            const parent = document.getElementById("todos");
+            parent.appendChild(createTodoElement(title, desc, newTodo.id, false));
+            
+            // Clear input fields
+            document.getElementById("title").value = "";
+            document.getElementById("desc").value = "";
+            document.getElementById("title").focus();
+            
+            updateEmptyState();
+        }
+        
+        function toggleDone(id) {
+            const todoIndex = todos.findIndex(todo => todo.id === id);
+            if (todoIndex === -1) return;
+            
+            todos[todoIndex].completed = !todos[todoIndex].completed;
+            saveTodos();
+            
+            const todoElement = document.getElementById(`todo-${id}`);
+            if (todoElement) {
+                todoElement.classList.toggle("completed");
+                const button = todoElement.querySelector(".done-btn");
+                if (button) {
+                    button.textContent = todos[todoIndex].completed ? "Undo" : "Mark as done";
+                }
+            }
+        }
+        
+        function deleteTodo(id) {
+            if (!confirm("Are you sure you want to delete this todo?")) return;
+            
+            todos = todos.filter(todo => todo.id !== id);
+            saveTodos();
+            
+            const todoElement = document.getElementById(`todo-${id}`);
+            if (todoElement) {
+                todoElement.remove();
+            }
+            
+            updateEmptyState();
+        }
+        
+        function saveTodos() {
+            localStorage.setItem("todos", JSON.stringify(todos));
+        }
+        
+        function loadTodos() {
+            const savedTodos = localStorage.getItem("todos");
+            if (savedTodos) {
+                todos = JSON.parse(savedTodos);
+                if (todos.length > 0) {
+                    globalId = Math.max(...todos.map(todo => todo.id)) + 1;
+                    
+                    const parent = document.getElementById("todos");
+                    parent.innerHTML = "";
+                    
+                    todos.forEach(todo => {
+                        parent.appendChild(createTodoElement(
+                            todo.title, 
+                            todo.desc, 
+                            todo.id, 
+                            todo.completed
+                        ));
+                    });
+                }
+            }
+            updateEmptyState();
+        }
+        
+        // Initialize the app
+        document.addEventListener("DOMContentLoaded", () => {
+            loadTodos();
+            
+            // Add keyboard support for adding todos
+            document.getElementById("desc").addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    addTodo();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
